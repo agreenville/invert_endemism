@@ -31,7 +31,7 @@ combinedShp <- do.call(what = rbind, args=listOfShp)
 combinedShp$dummy <-filenames
 
 # calc community matrix
-comm <- polys2comm(dat = combinedShp, species = "dummy", trace=1, res = 1)
+comm <- polys2comm(dat = combinedShp, species = "dummy", trace=1, res = 0.5)
 head(comm)
 
 # calc weigthed endemism
@@ -42,14 +42,20 @@ head(Endm.invert)
 m1 <- merge(comm$poly_shp, data.frame(grids=names(Endm.invert), WE=Endm.invert), by="grids")
 m1 <- m1[!is.na(m1@data$WE),]
 
+# calc corrected weighted endemism, 
+# (weighted endemism tally per cell divided by the species richness of that cell)
+
+m1$corrected_endemism <- m1$WE/m1$richness
+
 
 # save plot
-# png(file="output/endemism_inverts.png",
-#     width=880, height=350)
+# png(file="output/endemism_inverts_5.png",
+#    width=1000, height=600)
 
 # plot  c(bottom, left, top, rightt)
-par(mfrow = c(1, 2), mar=c(2, 0, 2, 0))
-plot_swatch(m1, values = m1$WE, k=10, leg = 5 ,border = NA,key_label = "Weighted endemism")# 
+par(mfrow = c(2, 2), mar=c(0, 0, 0, 0))
+plot_swatch(m1, values = m1$WE, k=10, leg = 5 ,border = NA,key_label = "Weighted endemism",
+            pos = "bottomleft")#
 
 
 #change datum for aust to match inverts and add
@@ -60,6 +66,10 @@ plot(aust_WGS84, add=TRUE)
 
 #species richness
 plot_swatch(m1, values = m1$richness, k=10, leg = 5 ,border = NA, key_label = "Species richness")
+plot(aust_WGS84, add=TRUE)
+
+#corrected weighted endemism
+plot_swatch(m1, values = m1$corrected_endemism, k=10, leg = 5 ,border = NA, key_label = "Corrected weighted endemism")
 plot(aust_WGS84, add=TRUE)
 
 
