@@ -1,5 +1,5 @@
 ################################################################################
-# Calc weigthed endemism for invertebrates
+# Calc weigthed endemism for invertebrates shapfiles
 # Aaron Greenville
 ################################################################################
 
@@ -14,7 +14,7 @@ aust = readOGR("C:\\Users\\aaron\\Dropbox (Sydney Uni)\\Projects\\GIS_files\\Wor
 plot(aust)
 
 # invert shapefiles
-baseDir <- file.path("polygons_Aaron/")
+baseDir <- file.path("C:\\Users\\aaron\\Dropbox (Sydney Uni)\\Projects\\2019-20_fires\\nesp_fire_invertebrates\\polygons_Aaron\\shapefiles")
 filenames <- list.files(baseDir, pattern = ".shp")
 filepaths <- paste(baseDir,"/", filenames, sep='')
 
