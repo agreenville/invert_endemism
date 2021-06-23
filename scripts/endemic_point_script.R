@@ -44,7 +44,7 @@ head(invert.point)
 comm.point <- points2comm(invert.point, lon = "longitude",
             lat = "latitude",
             species = "spfile",
-            res = 0.5, # size of grid in decimal degrees 0.1 = ~11km. 0.2 min I can go
+            res = 1, # size of grid in decimal degrees 0.1 = ~11km. 0.2 min I can go
             trace=1,
             shp.grids = NULL)  
 
@@ -183,7 +183,7 @@ point.maps <- tmap_arrange(spRh, weighted.endemism, Corrected.weighted.endemism)
 #tmap_save(point.maps, filename = "output/tmap_invert_point_endemism_0-5.png")
 
 ### Save out endemism file
-save(m1, file = "data/m1_point_0-5.rds")
+save(m1, file = "data/m1_point_1.rds")
 
 
 ## END ####
