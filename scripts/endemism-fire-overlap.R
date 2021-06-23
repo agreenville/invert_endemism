@@ -44,23 +44,6 @@ plot(analysis.area.utm, add=TRUE, col = "lightgrey")
 plot(aust.utm, add = TRUE)
 
 
-# fire.data_dbf <- foreign::read.dbf("data/AUS_GEEBAM_Fire_Severity_NIAFED20200224/AUS_GEEBAM_Fire_Severity_NIAFED20200224.tif.vat.dbf")
-# 
-# fire_severity.gbam <- reclassify(fire_severity, data.frame(fire.data_dbf$Value, fire.data_dbf$GEEBAMcls))
-
-
-#aggregate from 40x40 resolution to 252x252 (factor = 6.3)
-
-# current res
-# proj = "+proj=lcc +lat_1=-28 +lat_2=-36 +lat_0=-32 +lon_0=135 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs" 
-# fire_severity.gbam.lam <- projectRaster(fire_severity.gbam,
-#             crs = proj)
-# 
-# save(fire_severity.gbam.lam, "data/GEEBAM_UTS.rds")
-
-# fire_severity.gbam.aggregate <- aggregate(fire_severity.gbam, fact=6.3)
-# res(fire_severity.gbam.aggregate)
-
 ## >> break endemism value into quantiles and assign to new field ####
 
 m1$corrected_endemism_quantile <- cut(m1$corrected_endemism , breaks=quantile(m1$corrected_endemism),
@@ -206,7 +189,7 @@ tm_shape(m1.utm.crop) +
                           "Very high"))
    
   
-tmap_arrange(Corrected.weighted.endemism, input.map, ncol=2 )
+#tmap_arrange(Corrected.weighted.endemism, input.map, ncol=2 )
 
 
 
