@@ -160,7 +160,7 @@ Corrected.weighted.endemism <- tm_shape(m1) +
   tm_polygons("corrected_endemism", 
               style="quantile", 
               title="Points: Corrected weighted endemism",
-              lwd = 0.5)+
+              lwd = 0.5) + # palette="YlGnBu"
   tm_shape(aust_WGS84)+
   tm_polygons("PLACENAME", 
               alpha = 0,
