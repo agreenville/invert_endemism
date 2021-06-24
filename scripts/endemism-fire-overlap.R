@@ -9,6 +9,7 @@
 library(rgdal)
 library(raster)
 library(tidyverse)
+library(tmap)
 #library(ggplot2)
 
 ## >> load endemism results (polygons) ####
@@ -21,8 +22,7 @@ load("data/m1_point_1.rds")
 aust <- readOGR("C:\\Users\\aaron\\Dropbox (Sydney Uni)\\Projects\\GIS_files\\World boundaries\\Aust\\AustraliaAdmin.shp")
 plot(aust)
 
-aust.utm <- spTransform(aust,
-                               crs(fire_severity))
+
 
 ## >> Load in fire severity raster (re-classed) and get unique classes (raster) ####
 # From Payal: Note this is the GEEBAM severity layer that has been reprojected to 250m. sq 
@@ -32,7 +32,8 @@ aust.utm <- spTransform(aust,
 
 fire_severity <- raster("data/severity5_eqar250_native_paa.tif",
                         RAT = TRUE) #
-
+aust.utm <- spTransform(aust,
+                               crs(fire_severity))
 analysis.area <- readOGR("data/Preliminary_Analysis_Areas/prelim_analysis_areas_dissolve.shp")
 plot(analysis.area)
 
@@ -56,7 +57,7 @@ Corrected.weighted.endemism.q <- tm_shape(m1) +
               title="Points: Corrected weighted endemism",
               lwd = 0.5,
               palette="OrRd")+ #"-RdBu"
-  tm_shape(aust_WGS84)+
+  tm_shape(aust)+
   tm_polygons("PLACENAME", 
               alpha = 0,
               legend.show = F,
@@ -74,7 +75,7 @@ m1.dissolve <- aggregate(m1, by = "corrected_endemism_quantile")
                 title="Points: Corrected weighted endemism",
                 lwd = 0.5,
                 palette="OrRd")+ #"-RdBu"
-    tm_shape(aust_WGS84)+
+    tm_shape(aust)+
     tm_polygons("PLACENAME", 
                 alpha = 0,
                 legend.show = F,
@@ -148,6 +149,7 @@ burnt.endemism.area.plot <- endemism.burnt %>%
   ylab(expression("Area burnt "~(km^2)))+
   theme_classic()
 
+# cowplot::save_plot("output/endemism_area_plot.png", burnt.endemism.area.plot, base_height = 6, base_width = 8)
 
 ## Map of inputs ####
 
@@ -191,6 +193,7 @@ tm_shape(m1.utm.crop) +
   
 #tmap_arrange(Corrected.weighted.endemism, input.map, ncol=2 )
 
+# tmap_save(input.map, filename = "output/tmap_inputMap_1.png")
 
 
 
