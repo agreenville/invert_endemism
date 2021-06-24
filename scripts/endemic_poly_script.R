@@ -27,7 +27,7 @@ all_species <- names(species_polys)
 combinedShp$dummy <-all_species
 
 ##  calc community matrix ####
-comm.poly <- polys2comm(dat = combinedShp, species = "dummy", trace=1, res = 0.5)
+comm.poly <- polys2comm(dat = combinedShp, species = "dummy", trace=1, res = 1)
 head(comm.poly)
 
 
@@ -83,7 +83,8 @@ library(tmap)
 spRh.poly <- tm_shape(m1.poly) +
   tm_polygons("richness", 
               style="quantile", 
-              title="Species Richness")+
+              title="Species Richness",
+              palette="YlGnBu")+
   tm_shape(aust_WGS84)+
   tm_polygons("PLACENAME", 
               alpha = 0,
@@ -93,7 +94,8 @@ spRh.poly <- tm_shape(m1.poly) +
 weighted.endemism.poly <- tm_shape(m1.poly) +
   tm_polygons("WE", 
               style="quantile", 
-              title="Weighted endemism")+
+              title="Weighted endemism",
+              palette="YlGnBu")+
   tm_shape(aust_WGS84)+
   tm_polygons("PLACENAME", 
               alpha = 0,
@@ -104,7 +106,8 @@ Corrected.weighted.endemism.poly <- tm_shape(m1.poly) +
   tm_polygons("corrected_endemism", 
               style="quantile", 
               title="Polygons: Corrected weighted endemism",
-              lwd = 0.5)+
+              lwd = 0.5,
+              palette="YlGnBu")+
   tm_shape(aust_WGS84)+
   tm_polygons("PLACENAME", 
               alpha = 0,
@@ -131,7 +134,7 @@ maps.poly.point <- tmap_arrange( Corrected.weighted.endemism, Corrected.weighted
 
 
 ## Save out endemism file ####
-save(m1.poly, file = "data/m1_poly_0-5.rds")
+save(m1.poly, file = "data/m1_poly_1.rds")
 
 
 
