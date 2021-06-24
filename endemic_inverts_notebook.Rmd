@@ -1,0 +1,119 @@
+---
+title: "Invert endemism analysis summary"
+author: "Aaron Greenville"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: 4
+  html_notebook:
+    toc: yes
+    toc_float:
+      collapsed: no
+    toc_depth: 4
+geometry: left=1.5cm, right=1.5cm, top=1.5cm, bottom=1.5cm
+---
+
+```{r, echo=FALSE, include=FALSE}
+load("workspaces/endemism_point_1_20210623.RData")
+load("workspaces/endemism_poly_1_20210623.RData")
+load("workspaces/endemism_fire_1_20210624.RData")
+```
+
+```{r, echo=FALSE, include=FALSE}
+library(raster)
+library(tmap)
+```
+
+
+## Scope:
+
+Investigate the area the 2019/20 black summer wildfires burnt regions of high invertebrate endemism.
+
+
+## Datasets:
+
+Notes from Payal Bal
+
+- [GEEBAM](http://www.environment.gov.au/fed/catalog/search/resource/details.page?uuid=%7B8CE7D6BE-4A82-40D7-80BC-647CB1FE5C08%7D) fire severity: layer that has been reprojected to 250m. sq at Albers equal area and extent to cover islands and offland territories, then clipped to [NVIS](https://www.environment.gov.au/land/native-vegetation/national-vegetation-information-system/data-products) native vegetation and finally clipped to the [Preliminary Analysis Area](https://www.environment.gov.au/system/files/pages/a8d10ce5-6a49-4fc2-b94d-575d6d11c547/files/preliminary-analysis-area-19-jan-2020.pdf).
+
+- Species presence data: Unique species field = **spfile**. Please note that this is the field to be used for unique species identification. The number of unique species by scientificName will be less because there are duplicates. Spfile instead indicates unique IDs by each scientificName-class-family combination. The data in WGS84 and was masked using 1km resolution WGS84 mask to Australia.
+
+Total species:
+```{r}
+length(unique(invert.point$spfile))
+```
+
+
+- Species distribution data: polygons created where > 3 records for species above. Total species:
+```{r}
+length(species_polys)
+```
+
+- [Preliminary Analysis Area](https://www.environment.gov.au/system/files/pages/a8d10ce5-6a49-4fc2-b94d-575d6d11c547/files/preliminary-analysis-area-19-jan-2020.pdf): analysis area from DAWE.
+
+
+
+## Calculation of endemism
+
+The `phyloregion 1.0.4` package was used to calculate the weighted endemism (species richness inversely weighted by species ranges). Point data (presences only) and species distribution data (polygons) were converted to composition data by calculating the species composition per 1 degree cell size across Australia. The abundance and species richness was also calculated per grid cell. To correct for different survey effort across Australia for invertebrates, the corrected weighted endemism index was calculated by: 
+
+ weighted endemism per cell/ species richness of that cell
+ 
+ See: [Crisp et al. 2001: J. Biogeography](https://onlinelibrary.wiley.com/doi/abs/10.1046/j.1365-2699.2001.00524.x)
+
+
+## Calculate area burnt 
+
+To calculate the area burnt across increasing rates of invertebrate endemism, the corrected weighted endemism index above was categorised into quantiles (Q1: 0-25%, Q2: 26-50%, Q3: 51-75%, Q4: 76-100%), with Q4 representing the highest and Q1 representing the lowest endemism. The fire severity classes were then extracted from each 1 degree cell that contained an endemism quantile and area calculated using the `exactextractr 0.6.1` package.
+
+All data was re-projected to Albers equal area and clipped to the Preliminary Analysis Area.
+
+## Results
+
+### Endemism: Point data
+
+Note break points for visialisation are based on quantiles.
+
+```{r, warning=FALSE, fig.height= 8 , fig.width= 8}
+point.maps
+```
+
+
+### Endemism: Distribtion data  
+
+
+```{r, warning=FALSE, fig.height= 8 , fig.width= 8}
+maps.poly
+```
+
+
+### Endemism: Area burnt
+
+Note this has only been done for point data at 1 degree scale (so far).
+
+
+```{r,  warning=FALSE, fig.height= 8 , fig.width= 8}
+input.map
+```
+
+Datasets used to calculate the area burnt for each endemism category.
+
+
+
+```{r}
+burnt.endemism.area.plot
+```
+  
+  
+Area burnt within each fire severity class for each endemism category/quantile.   
+
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(endemism.burnt, caption = "The area burnt (km2) from the 2019/20 Black Summer wildfires for each endemism class and fire severity. Endemism class calculated from quantiles of the corrected weighted endemism (1 = 0-25% quantile, 2 = 26-50%, 3 = 51-75%, 4 = 76-100%; from lowest to highest rates of endemism)")
+```
+
+
+
+
+
