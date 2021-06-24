@@ -8,6 +8,7 @@
 library(phyloregion)
 library(rgdal)
 library(raster)
+library(tmap)
 
 
 
@@ -139,7 +140,8 @@ library(tmap)
 spRh <- tm_shape(m1) +
   tm_polygons("richness", 
               style="quantile", 
-              title="Species Richness")+
+              title="Species Richness",
+              palette="YlGnBu")+
   tm_shape(aust_WGS84)+
   tm_polygons("PLACENAME", 
               alpha = 0,
@@ -149,7 +151,8 @@ spRh <- tm_shape(m1) +
 weighted.endemism <- tm_shape(m1) +
   tm_polygons("WE", 
               style="quantile", 
-              title="Weighted endemism")+
+              title="Weighted endemism",
+              palette="YlGnBu")+
   tm_shape(aust_WGS84)+
   tm_polygons("PLACENAME", 
               alpha = 0,
@@ -159,8 +162,9 @@ weighted.endemism <- tm_shape(m1) +
 Corrected.weighted.endemism <- tm_shape(m1) +
   tm_polygons("corrected_endemism", 
               style="quantile", 
-              title="Points: Corrected weighted endemism",
-              lwd = 0.5) + # palette="YlGnBu"
+              title="Corrected weighted endemism",
+              lwd = 0.5,
+              palette="YlGnBu") + # palette="YlGnBu"
   tm_shape(aust_WGS84)+
   tm_polygons("PLACENAME", 
               alpha = 0,
@@ -180,7 +184,9 @@ point.maps <- tmap_arrange(spRh, weighted.endemism, Corrected.weighted.endemism)
 
 ## Saving plot and results ####
 
-#tmap_save(point.maps, filename = "output/tmap_invert_point_endemism_0-5.png")
+# tmap_save(point.maps, filename = "output/tmap_invert_point_endemism_1.png")
+# 
+# tmap_save(Corrected.weighted.endemism, filename = "output/tmap_invert_point_Wendemism_1.png")
 
 ### Save out endemism file
 save(m1, file = "data/m1_point_1.rds")
