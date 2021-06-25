@@ -15,9 +15,14 @@ geometry: left=1.5cm, right=1.5cm, top=1.5cm, bottom=1.5cm
 ---
 
 ```{r, echo=FALSE, include=FALSE}
-load("workspaces/endemism_point_1_20210623.RData")
-load("workspaces/endemism_poly_1_20210623.RData")
-load("workspaces/endemism_fire_1_20210624.RData")
+# load("workspaces/endemism_point_1_20210623.RData")
+# load("workspaces/endemism_poly_1_20210623.RData")
+# load("workspaces/endemism_fire_1_20210624.RData")
+
+
+load("workspaces/endemism_point_0-5_20210625.RData")
+load("workspaces/endemism_poly_0-5_20210625.RData")
+load("workspaces/endemism_fire_0-5_20210625.RData")
 ```
 
 ```{r, echo=FALSE, include=FALSE}
@@ -52,11 +57,11 @@ length(species_polys)
 
 - [Preliminary Analysis Area](https://www.environment.gov.au/system/files/pages/a8d10ce5-6a49-4fc2-b94d-575d6d11c547/files/preliminary-analysis-area-19-jan-2020.pdf): analysis area from DAWE.
 
-
+- Github repro for this project: [invert_endemism](https://github.com/agreenville/invert_endemism)
 
 ## Calculation of endemism
 
-The `phyloregion 1.0.4` package was used to calculate the weighted endemism (species richness inversely weighted by species ranges). Point data (presences only) and species distribution data (polygons) were converted to composition data by calculating the species composition per 1 degree cell size across Australia. The abundance and species richness was also calculated per grid cell. To correct for different survey effort across Australia for invertebrates, the corrected weighted endemism index was calculated by: 
+The `phyloregion 1.0.4` package was used to calculate the weighted endemism (species richness inversely weighted by species ranges). Point data (presences only) and species distribution data (polygons) were converted to composition data by calculating the species composition per 0.5 degree cell size across Australia. The abundance and species richness was also calculated per grid cell. To correct for different survey effort across Australia for invertebrates, the corrected weighted endemism index was calculated by: 
 
  weighted endemism per cell/ species richness of that cell
  

@@ -27,7 +27,7 @@ all_species <- names(species_polys)
 combinedShp$dummy <-all_species
 
 ##  calc community matrix ####
-comm.poly <- polys2comm(dat = combinedShp, species = "dummy", trace=1, res = 1)
+comm.poly <- polys2comm(dat = combinedShp, species = "dummy", trace=1, res = 0.5)
 head(comm.poly)
 
 
@@ -134,7 +134,7 @@ maps.poly.point <- tmap_arrange( Corrected.weighted.endemism, Corrected.weighted
 
 
 ## Save out endemism file ####
-save(m1.poly, file = "data/m1_poly_1.rds")
+save(m1.poly, file = "data/m1_poly_0.5.rds")
 
 
 

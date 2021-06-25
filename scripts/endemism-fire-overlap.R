@@ -16,7 +16,7 @@ library(tmap)
 
 load("data/m1_point_1.rds")
 
-# load("data/m1_point_0-5.rds")
+load("data/m1_point_0-5.rds")
 # load("data/m1_poly_0-5.rds")
 
 aust <- readOGR("C:\\Users\\aaron\\Dropbox (Sydney Uni)\\Projects\\GIS_files\\World boundaries\\Aust\\AustraliaAdmin.shp")
@@ -149,7 +149,7 @@ burnt.endemism.area.plot <- endemism.burnt %>%
   ylab(expression("Area burnt "~(km^2)))+
   theme_classic()
 
-# cowplot::save_plot("output/endemism_area_plot.png", burnt.endemism.area.plot, base_height = 6, base_width = 8)
+# cowplot::save_plot("output/endemism_area_0-5-plot.png", burnt.endemism.area.plot, base_height = 6, base_width = 8)
 
 ## Map of inputs ####
 
@@ -193,7 +193,7 @@ tm_shape(m1.utm.crop) +
   
 #tmap_arrange(Corrected.weighted.endemism, input.map, ncol=2 )
 
-# tmap_save(input.map, filename = "output/tmap_inputMap_1.png")
+# tmap_save(input.map, filename = "output/tmap_inputMap_0-5.png")
 
 
 

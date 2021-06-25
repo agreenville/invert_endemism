@@ -45,7 +45,7 @@ head(invert.point)
 comm.point <- points2comm(invert.point, lon = "longitude",
             lat = "latitude",
             species = "spfile",
-            res = 1, # size of grid in decimal degrees 0.1 = ~11km. 0.2 min I can go
+            res = 0.5, # size of grid in decimal degrees 0.1 = ~11km. 0.2 min I can go
             trace=1,
             shp.grids = NULL)  
 
@@ -141,6 +141,7 @@ spRh <- tm_shape(m1) +
   tm_polygons("richness", 
               style="quantile", 
               title="Species Richness",
+              lwd = 0.5,
               palette="YlGnBu")+
   tm_shape(aust_WGS84)+
   tm_polygons("PLACENAME", 
@@ -152,6 +153,7 @@ weighted.endemism <- tm_shape(m1) +
   tm_polygons("WE", 
               style="quantile", 
               title="Weighted endemism",
+              lwd = 0.5,
               palette="YlGnBu")+
   tm_shape(aust_WGS84)+
   tm_polygons("PLACENAME", 
@@ -184,12 +186,12 @@ point.maps <- tmap_arrange(spRh, weighted.endemism, Corrected.weighted.endemism)
 
 ## Saving plot and results ####
 
-# tmap_save(point.maps, filename = "output/tmap_invert_point_endemism_1.png")
+# tmap_save(point.maps, filename = "output/tmap_invert_point_endemism_0-5.png")
 # 
-# tmap_save(Corrected.weighted.endemism, filename = "output/tmap_invert_point_Wendemism_1.png")
+# tmap_save(Corrected.weighted.endemism, filename = "output/tmap_invert_point_Wendemism_0-5.png")
 
 ### Save out endemism file
-save(m1, file = "data/m1_point_1.rds")
+save(m1, file = "data/m1_point_0-5.rds")
 
 
 ## END ####
