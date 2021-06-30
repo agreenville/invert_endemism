@@ -22,12 +22,13 @@ geometry: left=1.5cm, right=1.5cm, top=1.5cm, bottom=1.5cm
 
 load("workspaces/endemism_point_0-5_20210625.RData")
 load("workspaces/endemism_poly_0-5_20210625.RData")
-load("workspaces/endemism_fire_0-5_20210625.RData")
+load("workspaces/endemism_fire_0-5_20210630-2.RData")
 ```
 
 ```{r, echo=FALSE, include=FALSE}
 library(raster)
 library(tmap)
+library(tidyverse)
 ```
 
 
@@ -40,9 +41,9 @@ Investigate the area the 2019/20 black summer wildfires burnt regions of high in
 
 Notes from Payal Bal
 
-- [GEEBAM](http://www.environment.gov.au/fed/catalog/search/resource/details.page?uuid=%7B8CE7D6BE-4A82-40D7-80BC-647CB1FE5C08%7D) fire severity: layer that has been reprojected to 250m. sq at Albers equal area and extent to cover islands and offland territories, then clipped to [NVIS](https://www.environment.gov.au/land/native-vegetation/national-vegetation-information-system/data-products) native vegetation and finally clipped to the [Preliminary Analysis Area](https://www.environment.gov.au/system/files/pages/a8d10ce5-6a49-4fc2-b94d-575d6d11c547/files/preliminary-analysis-area-19-jan-2020.pdf).
+- [GEEBAM](http://www.environment.gov.au/fed/catalog/search/resource/details.page?uuid=%7B8CE7D6BE-4A82-40D7-80BC-647CB1FE5C08%7D) fire severity: layer that has been reprojected to 250m. sq at Albers equal area and extent to cover islands and offland territories, then clipped to [NVIS](https://www.environment.gov.au/land/native-vegetation/national-vegetation-information-system/data-products) native vegetation and finally clipped to the [Preliminary Analysis Area](https://www.environment.gov.au/system/files/pages/a8d10ce5-6a49-4fc2-b94d-575d6d11c547/files/preliminary-analysis-area-19-jan-2020.pdf). Severity classes were then reclassified so high (4) and very high (5) were combined.
 
-- Species presence data: Unique species field = **spfile**. Please note that this is the field to be used for unique species identification. The number of unique species by scientificName will be less because there are duplicates. Spfile instead indicates unique IDs by each scientificName-class-family combination. The data in WGS84 and was masked using 1km resolution WGS84 mask to Australia.
+- Species presence data: Unique species field = **spfile**. Please note that this is the field to be used for unique species identification. The number of unique species by scientificName will be less because there are duplicates. Spfile instead indicates unique IDs by each scientificName-class-family combination. The data in WGS84 and was masked using 1km resolution WGS84 mask to Australia.  
 
 Total species:
 ```{r}
@@ -57,7 +58,8 @@ length(species_polys)
 
 - [Preliminary Analysis Area](https://www.environment.gov.au/system/files/pages/a8d10ce5-6a49-4fc2-b94d-575d6d11c547/files/preliminary-analysis-area-19-jan-2020.pdf): analysis area from DAWE.
 
-- Github repro for this project: [invert_endemism](https://github.com/agreenville/invert_endemism)
+- Github repro for this project: [invert_endemism](https://github.com/agreenville/invert_endemism)  
+  
 
 ## Calculation of endemism
 
@@ -70,7 +72,7 @@ The `phyloregion 1.0.4` package was used to calculate the weighted endemism (spe
 
 ## Calculate area burnt 
 
-To calculate the area burnt across increasing rates of invertebrate endemism, the corrected weighted endemism index above was categorised into quantiles (Q1: 0-25%, Q2: 26-50%, Q3: 51-75%, Q4: 76-100%), with Q4 representing the highest and Q1 representing the lowest endemism. The fire severity classes were then extracted from each 1 degree cell that contained an endemism quantile and area calculated using the `exactextractr 0.6.1` package.
+To calculate the area burnt across increasing rates of invertebrate endemism, the corrected weighted endemism index above was categorised into percentiles (0-20%, 20-40%, 40-60%, 60-80%, 80-100%), with 80-100% representing the highest and 0-20% representing the lowest endemism. The fire severity classes were then extracted from each 0.5 degree cell that contained an endemism percentile and area calculated using the `exactextractr 0.6.1` package.
 
 All data was re-projected to Albers equal area and clipped to the Preliminary Analysis Area.
 
@@ -91,6 +93,15 @@ point.maps
 ```{r, warning=FALSE, fig.height= 8 , fig.width= 8}
 maps.poly
 ```
+
+#### Moran's I test
+
+To determine if patterns of endemism were randomly distributed across Australia or showed patterns of spatial autocorrelation, the Moran’s I test was calculated using the spdep  1.1-5 (Roger et al. 2013). Spatial autocorrelation was calculated as a function of distance from the neighbouring polygon centres for each cell, with a search radius within 200 km. P-values were calculated using a Monte Carlo Test using 10,000 permutations (Roger et al. 2013). If corrected weighted endemism showed significant autocorrelation, it was assumed that patterns of invertebrate endemism were not randomly distributed and clustered into hotspots (Crisp et al. 2001).
+
+```{r}
+MI
+```
+
 
 
 ### Endemism: Area burnt
@@ -115,7 +126,9 @@ Area burnt within each fire severity class for each endemism category/quantile.
 
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(endemism.burnt, caption = "The area burnt (km2) from the 2019/20 Black Summer wildfires for each endemism class and fire severity. Endemism class calculated from quantiles of the corrected weighted endemism (1 = 0-25% quantile, 2 = 26-50%, 3 = 51-75%, 4 = 76-100%; from lowest to highest rates of endemism)")
+endemism.burnt %>% mutate_if(is.numeric, round, digits=2) %>%
+
+knitr::kable(caption = "The area burnt (km^2) from the 2019/20 Black Summer wildfires for each endemism class and fire severity. Endemism class calculated from percentiles of the corrected weighted endemism (0-20%,20-40%, 40-60%,60-80%, 80-100%; from lowest to highest rates of endemism)")
 ```
 
 
